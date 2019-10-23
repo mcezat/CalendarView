@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.children
+import androidx.fragment.app.DialogFragment
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.model.InDateStyle
@@ -26,14 +27,10 @@ import org.threeten.bp.YearMonth
 import org.threeten.bp.format.DateTimeFormatter
 
 
-class Example1Fragment : BaseFragment(), HasToolbar {
-
-    override val toolbar: Toolbar?
-        get() = null
-
-    override val titleRes: Int = R.string.example_1_title
+class Example1DialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        showsDialog = true
         return inflater.inflate(R.layout.exmaple_1_fragment, container, false)
     }
 
@@ -202,6 +199,14 @@ class Example1Fragment : BaseFragment(), HasToolbar {
     override fun onStop() {
         super.onStop()
         requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.colorPrimaryDark)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Force the dialog width to 90% of the screen width
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
 }

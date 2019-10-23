@@ -13,7 +13,7 @@ class HomeActivity : AppCompatActivity() {
 
     private val examplesAdapter = HomeOptionsAdapter {
         val instance = when (it.titleRes) {
-            R.string.example_1_title -> Example1Fragment()
+            R.string.example_1_title -> Example1DialogFragment()
             R.string.example_2_title -> Example2Fragment()
             R.string.example_3_title -> Example3Fragment()
             R.string.example_4_title -> Example4Fragment()
@@ -22,26 +22,31 @@ class HomeActivity : AppCompatActivity() {
             R.string.example_7_title -> Example7Fragment()
             else -> throw IllegalArgumentException()
         }
-        supportFragmentManager.beginTransaction()
-            .run {
-                if (instance is Example1Fragment || instance is Example4Fragment || instance is Example5Fragment) {
-                    return@run setCustomAnimations(
-                        R.anim.slide_in_up,
-                        R.anim.fade_out,
-                        R.anim.fade_in,
-                        R.anim.slide_out_down
-                    )
-                }
-                return@run setCustomAnimations(
-                    R.anim.slide_in_right,
-                    R.anim.slide_out_left,
-                    R.anim.slide_in_left,
-                    R.anim.slide_out_right
-                )
-            }
-            .add(R.id.homeContainer, instance, instance.javaClass.simpleName)
-            .addToBackStack(instance.javaClass.simpleName)
-            .commit()
+
+        if (instance is Example1DialogFragment) {
+            instance.show(supportFragmentManager, "Example1DialogFragment")
+        } else {
+            supportFragmentManager.beginTransaction()
+                    .run {
+                        if (instance is Example4Fragment || instance is Example5Fragment) {
+                            return@run setCustomAnimations(
+                                    R.anim.slide_in_up,
+                                    R.anim.fade_out,
+                                    R.anim.fade_in,
+                                    R.anim.slide_out_down
+                            )
+                        }
+                        return@run setCustomAnimations(
+                                R.anim.slide_in_right,
+                                R.anim.slide_out_left,
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_right
+                        )
+                    }
+                    .add(R.id.homeContainer, instance, instance.javaClass.simpleName)
+                    .addToBackStack(instance.javaClass.simpleName)
+                    .commit()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
